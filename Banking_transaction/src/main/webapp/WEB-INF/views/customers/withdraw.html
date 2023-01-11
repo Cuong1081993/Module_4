@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>width-draw</title>
+    <th:block th:replace="/layout/css"/>
+</head>
+<body _c_t_common="1">
+<div class="container">
+    <div class="table-title mb-4">
+        <div class="row">
+            <div class="col-sm-8">
+                <h2>Withdraw money from the customer's account</h2>
+            </div>
+            <div class="col-sm-4">
+                <a th:href="@{/customers}" class="btn btn-outline-light"><i class="fa fa-list" aria-hidden="true"></i>
+                    <span>Customer list</span></a>
+            </div>
+        </div>
+    </div>
+    <th:block th:if="${error != true}">
+    <form id="frmWithdraw" method="post" novalidate="novalidate" th:object="${customer}">
+        <fieldset class="row g-3">
+            <div class="mb-3 col-md-6">
+                <div class="form-group row">
+                    <label class="col-sm-12 col-form-label">Customer ID</label>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" th:field="*{id}" readonly="" id="customerId"
+                               name="customerId" value="1415">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 col-md-6">
+                <div class="form-group row">
+                    <label class="col-sm-12 col-form-label">Full Name</label>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" th:field="*{fullName}" readonly="" id="fullName"
+                               name="fullName" value="Ariana Mclean">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 col-md-6">
+                <div class="form-group row">
+                    <label class="col-sm-12 col-form-label">Current balance ($)</label>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control num-space" th:field="*{balance}" readonly="" id="balance"
+                               name="balance" value="2222222">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 col-md-6">
+                <div class="form-group row">
+                    <label class="col-sm-12 col-form-label">Transaction Amount ($)</label>
+                    <div class="col-sm-12" th:object="${withdraw}">
+                        <input type="number" class="form-control num-space" maxlength="14"
+                               th:field="*{transactionAmount}" id="transactionAmount" name="transactionAmount" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 col-md-12">
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                        <button type="submit" class="btn btn-outline-warning">
+                            <i class="fa fa-minus" aria-hidden="true"></i>
+                            Withdraw
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    </th:block>
+    <footer th:class="${error != null ? (error ? 'footer-error' : 'footer-success') : '' }">
+        <div class="container-fluid">
+            <th:block th:if="${error == false}">
+                <div>
+                    <h5>Successful withdraw transaction</h5>
+                </div>
+            </th:block>
+
+            <th:block th:if="${error == true}">
+                <div>
+                    <h5>Error messages:</h5>
+                </div>
+                <div>
+                    <ul>
+                        <li th:text="${message}"></li>
+                    </ul>
+                </div>
+            </th:block>
+        </div>
+    </footer>
+</div>
+
+<link rel="stylesheet" href="">
+
+<div id="eJOY__extension_root" class="eJOY__extension_root_class" style="all: unset;"></div>
+<iframe id="nr-ext-rsicon"
+        style="position: absolute; display: none; width: 50px; height: 50px; z-index: 2147483647; border-style: none; background: transparent;"></iframe>
+</body>
+</html>

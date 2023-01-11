@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <title>Deposit</title>
+  <th:block th:replace="/layout/css"/>
+</head>
+<body>
+<div class="container">
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-5">
+        <h1>Deposit</h1>
+      </div>
+      <div class="col-sm-7">
+        <a  th:href="@{/customers}" class="btn btn-outline-light">
+          <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+          <span>
+                        <i class="fas fa-list"></i>
+                        List of customers
+                    </span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div>
+    <th:block th:if="${error != true}">
+    <form method="post" th:object="${customer}">
+      <div class="row mt-3">
+        <div class="col-sm-6">
+          <label for="id" class="form-label"><strong>ID</strong></label>
+          <input type="text" id="id" th:field="*{id}" class="form-control" readonly>
+        </div>
+        <div class="col-sm-6">
+          <label for="fullName" class="form-label"><strong>Full name</strong></label>
+          <input type="text" id="fullName" th:field="*{fullName}" class="form-control" readonly>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-6">
+          <label for="balance" class="form-label"><strong>Balance</strong></label>
+          <input type="text" id="balance" th:field="*{balance}" class="form-control" readonly>
+        </div>
+        <div class="col-sm-6">
+          <label for="transactionAmount" class="form-label"><strong>Transaction Amount ($)</strong></label>
+          <div class="col-sm-12" th:object="${deposit}">
+            <input type="number" class="form-control" id="transactionAmount" name="transactionAmount" th:field="*{transactionAmount}"/>
+                        <span th:if="${#fields.hasErrors('transactionAmount')}" th:errors="*{transactionAmount}"></span>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-lg-3">
+            <button type="submit" class="btn btn-outline-success">
+              <i class="fas fa-plus"></i>
+              Deposit
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    </th:block>
+  </div>
+</div>
+<footer th:class="${error != null ? (error ? 'footer-error' : 'footer-success') : '' }">
+  <div class="container">
+    <th:block th:if="${error == false}">
+      <div>
+        <h5>Successful deposit transaction</h5>
+      </div>
+    </th:block>
+
+    <th:block th:if="${error == true}">
+      <div>
+        <h5>Error messages:</h5>
+      </div>
+      <div>
+        <ul>
+          <li th:text="${message}"></li>
+        </ul>
+      </div>
+    </th:block>
+  </div>
+</footer>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

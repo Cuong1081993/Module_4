@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Edit</title>
+    <th:block th:replace="/layout/css"/>
+</head>
+<body>
+
+<div class="container">
+    <div class="table-title">
+        <div class="row">
+            <div class="col-sm-5">
+                <h1>Update customers</h1>
+            </div>
+            <div class="col-sm-7">
+                <a th:href="@{/customers}" class="btn btn-outline-light">
+                    <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                    <span>
+            <i class="fas fa-list"></i>
+            List of customers
+          </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <form method="post" th:object="${customer}">
+            <div class="row mt-3">
+                <div class="col-sm-6">
+                    <label for="fullName" class="form-label"><strong>Full name</strong></label>
+                    <input type="text" id="fullName" th:field="*{fullName}" class="form-control">
+                    <span th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+                </div>
+                <div class="col-sm-6">
+                    <label for="email" class="form-label"><strong>Email</strong></label>
+                    <input type="text" id="email" th:field="*{email}" class="form-control">
+                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm-6">
+                    <label for="phone" class="form-label"><strong>Phone</strong></label>
+                    <input type="text" id="phone" th:field="*{phone}" class="form-control">
+                    <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                </div>
+                <div class="col-sm-6">
+                    <label for="address" class="form-label"><strong>Address</strong></label>
+                    <input type="text" id="address" th:field="*{address}" class="form-control">
+                    <span th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-lg-3">
+                    <button type="submit" class="btn btn-outline-secondary">
+                        <i class="fas fa-plus"></i>
+                        Edit customer
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+<footer>
+    <th:block th:if="${error == true}">
+        <div>
+            <h1 th:text="${message}"></h1>
+        </div>
+    </th:block>
+</footer>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+</html>

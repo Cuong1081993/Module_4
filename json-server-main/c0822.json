@@ -1,0 +1,74 @@
+{
+  "customers": [
+    {
+      "id": 1,
+      "fullName": "NVA",
+      "email": "nva@abc.vn",
+      "phone": 523525,
+      "address": "VN",
+      "balance": 0,
+      "deleted": 0
+    },
+    {
+      "fullName": "NVA",
+      "id": 4,
+      "email": "nvb@abc.vn",
+      "phone": 123456,
+      "address": "VN",
+      "balance": 0,
+      "deleted": 0
+    },
+    {
+      "fullName": "NVZ",
+      "email": "nvb@abc.vn",
+      "phone": 123456,
+      "address": "VN",
+      "balance": 0,
+      "deleted": 0,
+      "id": 5
+    },
+    {
+      "fullName": "ABC",
+      "email": "nva@abc.vn",
+      "phone": 523525,
+      "address": "VN",
+      "balance": 0,
+      "deleted": 0,
+      "id": 6
+    }
+  ],
+  "deposits": [
+    {
+      "id": 1,
+      "customerId": 1,
+      "transactionAmount": 100000
+    }
+  ],
+  "withdraws": [
+    {
+      "id": 1,
+      "customerId": 1,
+      "transactionAmount": 1000
+    }
+  ],
+  "transfers": [
+    {
+      "id": 1,
+      "senderId": 1,
+      "recipientId": 2,
+      "transferAmount": 10000,
+      "fees": 10,
+      "feesAmount": 1000,
+      "transactionAmount": 11000
+    },
+    {
+      "id": 2,
+      "senderId": 2,
+      "recipientId": 1,
+      "transferAmount": 1000,
+      "fees": 10,
+      "feesAmount": 100,
+      "transactionAmount": 1100
+    }
+  ]
+}
