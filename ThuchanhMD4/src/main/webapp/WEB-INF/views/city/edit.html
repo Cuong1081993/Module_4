@@ -1,0 +1,96 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <!--  <th:block th:replace="/header :: header"/>-->
+  <link rel="icon" href="/assets/favicon.ico">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update city</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <link rel="stylesheet" href="/assets/bootstrap/5.2.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/fontawesome/5.2.0/css/all.min.css">
+  <style>
+    .footer {
+      margin-top: 5px;
+      color: #842029;
+      background-color: #f8d7da;
+      border-color: #f5c2c7;
+    }
+    .footer>.success {
+      margin-top: 5px;
+      color: #2d2d2d;
+      background-color: #1ce723;
+      border-color: #017234;
+    }
+    .footer>.success ul{
+      list-style-type: none;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+<th:block th:if="city">
+  <div class="container">
+    <div class="row mt-5 border-1">
+      <div class="text-center bg-dark text-white row mb-2 justify-content-center w-100">
+        <label class="float-left font-weight-bold">Thành Phố </label>
+        <p th:text="${city.cityName}"></p>
+      </div>
+      <div class="col-lg-3">
+        <a href="/city" class="btn btn-outline-success float-right">Xem Danh Sách Thành Phố</a>
+      </div>
+    </div>
+    <form method="post" th:object="${city}" id="form-edit">
+      <div class="form-group row mt-3">
+        <label class="form-label col-2">Tên: &nbsp;</label>
+        <input th:field="${city.cityName}" class="form-control col-10" name="cityName">
+      </div>
+      <div class="form-group row">
+        <label class="form-label col-2">Quốc Gia:&nbsp; </label>
+        <select class="form-select" th:field="${city.country}">
+          <option th:value="${city.country.id}" th:text="${city.country.nameCountry}"></option>
+          <th:block th:each="country : ${countries}">
+            <th:block th:if="${country.id != city.country.id}">
+              <option th:value="${country.id}" th:text="${country.nameCountry}"></option>
+            </th:block>
+          </th:block>
+        </select>
+      </div>
+      <div class="form-group row">
+        <label class="form-label col-2">Diện tích: &nbsp;</label>
+        <input type="number" th:field="${city.area}" class="form-control col-10" name="area">
+      </div>
+      <div class="form-group row">
+        <label class="form-label col-2">Dân Số: &nbsp;</label>
+        <input  th:field="${city.population}" class="form-control col-10" name="population">
+      </div>
+      <div class="form-group row">
+        <label class="form-label col-2">GDP: &nbsp;</label>
+        <input th:field="${city.gdp}" class="form-control col-10" name="GDP">
+      </div>
+      <div class="form-group row">
+        <label class="form-label col-2">Giới thiệu: &nbsp;</label>
+        <input th:field="${city.description}" class="form-control col-10" name="description">
+      </div>
+      <div class="justify-content-center row w-100">
+        <button class="btn btn-outline-success mr-2" type="submit">Cập Nhật</button>
+        <a th:href="@{/city}" class="btn btn-outline-danger" th:text="Thoát"></a>
+      </div>
+    </form>
+    <div class="bg-danger text-white w-75">
+      <th:block th:if="error">
+        <th:block th:each="string : ${error}">
+          <div th:text="${string}"></div>
+        </th:block>
+      </th:block>
+    </div>
+  </div>
+</th:block>
+
+<th:block th:replace="/script::script"/>
+</body>
+</html>

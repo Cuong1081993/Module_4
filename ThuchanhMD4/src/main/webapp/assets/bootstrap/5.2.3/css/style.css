@@ -1,0 +1,17 @@
+.modal-alert-danger {
+    color: rgb(105, 7, 7);
+    background-color: rgb(244, 225, 225);
+    width: 300px;
+    margin: 20px;
+}
+
+.modal-alert-danger label {
+    display: list-item;
+    border-radius: 1px;
+}
+.hide {
+    display: none;
+}
+.error {
+    color: rgb(121, 8, 8);
+}
