@@ -24,70 +24,58 @@
     <!-- ============================================================== -->
 
     <div class="content-page">
-        <div class="container">
-            <div class="table-title">
-                <div class="row d-flex justify-content-between">
-                    <div class="col-sm-5">
-                        <h1>Deposit</h1>
-                        <a th:href="@{/customers}" class="btn btn-outline-secondary">
-                            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-                            <span>
-                            <i class="fas fa-list"></i>
-                            List of customers
-                             </span>
-                        </a>
-                    </div>
+        <form method="post" th:object="${transfer}">
+            <div class="row mt-3">
+                <div class="col-lg-3">
+                    <label>Sender ID</label>
+                    <input type="text" class="form-control" th:field="${sender.id}" readonly>
+                </div>
+                <div class="col-lg-3">
+                    <label>Sender Name</label>
+                    <input type="text" class="form-control" th:field="${sender.fullName}" readonly>
+                </div>
+                <div class="col-lg-3">
+                    <label>Email</label>
+                    <input type="email" class="form-control" th:field="${sender.email}" readonly>
+                </div>
+                <div class="col-lg-3">
+                    <label>Balance (%)</label>
+                    <input type="text" class="form-control" th:field="${sender.balance}" readonly>
                 </div>
             </div>
-            <div>
-                <div>
-                    <form method="post" th:object="${customers}">
-                        <div class="row mt-3">
-                            <div class="col-sm-6">
-                                <label for="id" class="form-label"><strong>ID</strong></label>
-                                <input type="text" id="id" th:field="*{id}" class="form-control" readonly>
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="fullName" class="form-label"><strong>Full name</strong></label>
-                                <input type="text" id="fullName" th:field="*{fullName}" class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-sm-6">
-                                <label for="balance" class="form-label">
-                                    <strong>Balance</strong>
-                                </label>
-                                <input type="text" id="balance" th:field="*{balance}" class="form-control" readonly>
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="transactionAmount" class="form-label">
-                                    <strong>Transaction Amount
-                                        ($)</strong>
-                                </label>
-                                <div th:object="${deposit}">
-                                    <input type="number" class="form-control" id="transactionAmount"
-                                           name="transactionAmount" th:field="*{transactionAmount}"/>
-                                    <span th:if="${#fields.hasErrors('transactionAmount')}"
-                                          th:errors="*{transactionAmount}"></span>
-                                </div>
-                                <div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-3">
-                                <button type="submit" class="btn btn-outline-success">
-                                    <i class="fas fa-plus"></i>
-                                    Transfer
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+            <div class="row mt-3">
+                <div class="col-lg-3">
+                    <label>Recipient Name</label>
+                    <select th:field="*{recipient.id}" class="form-control">
+                        <th:block th:each="item : ${recipient}">
+                            <option th:value="${item.id}" th:text="${item.fullName}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="col-lg-3">
+                    <label>Transfer Amount ($)</label>
+                    <input type="text" class="form-control" th:field="*{transferAmount}" >
+                </div>
+                <div class="col-lg-3">
+                    <label>Fees (%)</label>
+                    <input type="text" class="form-control" value="10" readonly>
+                </div>
+                <div class="col-lg-3">
+                    <label>Total amount of transaction (%)</label>
+                    <input type="text" class="form-control" id="transactionAmount" readonly>
                 </div>
             </div>
-        </div>
+            <div class="row mt-3">
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="fas fa-exchange-alt"></i>
+                        Transfer
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
     <!-- ============================================================== -->
     <!-- End Page content -->
     <!-- ============================================================== -->

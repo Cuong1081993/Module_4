@@ -2,10 +2,13 @@ package com.example.service.Customer;
 
 import com.example.model.Customer;
 import com.example.model.Deposit;
+import com.example.model.Transfer;
 import com.example.model.Withdraw;
 import com.example.repository.CustomerRepository;
 import com.example.repository.DepositRepository;
+import com.example.repository.TransferRepository;
 import com.example.repository.WithdrawRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,17 +20,16 @@ import java.util.Optional;
 @Transactional
 
 public class CustomerService implements ICustomerService {
-    private final CustomerRepository customerRepository;
-    private final DepositRepository depositRepository;
-    private final WithdrawRepository withdrawRepository;
+   @Autowired
+   private CustomerRepository customerRepository;
+   @Autowired
+    private DepositRepository depositRepository;
+   @Autowired
+    private WithdrawRepository withdrawRepository;
+   @Autowired
+    private TransferRepository transferRepository;
 
-    public CustomerService(CustomerRepository customerRepository,
-                           DepositRepository depositRepository,
-                           WithdrawRepository withdrawRepository) {
-        this.customerRepository = customerRepository;
-        this.depositRepository = depositRepository;
-        this.withdrawRepository = withdrawRepository;
-    }
+
 
     @Override
     public List<Customer> findAllByIdNot(long id) {
@@ -91,5 +93,17 @@ public class CustomerService implements ICustomerService {
         withdraw.setCustomer(customer);
         withdrawRepository.save(withdraw);
         customerRepository.decrementBalance(customerId,transactionAmount);
+    }
+
+    @Override
+    public void transfer(Transfer transfer) {
+        Long senderId = transfer.getSender().getId();
+        BigDecimal transactionAmount = transfer.getTransactionAmount();
+        customerRepository.decrementBalance(senderId,transactionAmount);
+        Long  recipient = transfer.getRecipient().getId();
+        BigDecimal transferAmount = transfer.getTransferAmount();
+        customerRepository.incrementBalance(recipient,transferAmount);
+
+        transferRepository.save(transfer);
     }
 }

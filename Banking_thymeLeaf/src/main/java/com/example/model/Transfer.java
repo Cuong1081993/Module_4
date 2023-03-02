@@ -20,7 +20,7 @@ public class Transfer extends ModelGeneral {
 
     @ManyToOne(targetEntity = Customer.class)
     @JoinColumn(name = "sender_id", referencedColumnName = "id", nullable = false)
-    private Customer sender_id;
+    private Customer sender;
 
     @ManyToOne(targetEntity = Customer.class)
     @JoinColumn(name = "recipient_id", referencedColumnName = "id", nullable = false)
@@ -35,7 +35,7 @@ public class Transfer extends ModelGeneral {
         this.feeAmount = feeAmount;
         this.transactionAmount = transactionAmount;
         this.transferAmount = transferAmount;
-        this.sender_id = sender_id;
+        this.sender = sender_id;
         this.recipient = recipient;
     }
 
@@ -79,12 +79,12 @@ public class Transfer extends ModelGeneral {
         this.transferAmount = transferAmount;
     }
 
-    public Customer getSender_id() {
-        return sender_id;
+    public Customer getSender() {
+        return sender;
     }
 
-    public void setSender_id(Customer sender_id) {
-        this.sender_id = sender_id;
+    public void setSender(Customer sender) {
+        this.sender = sender;
     }
 
     public Customer getRecipient() {

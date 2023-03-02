@@ -3,6 +3,7 @@ package com.example.controller;
 
 import com.example.model.Customer;
 import com.example.model.Deposit;
+import com.example.model.Transfer;
 import com.example.model.Withdraw;
 import com.example.service.Customer.ICustomerService;
 import com.example.service.Deposit.IDepositService;
@@ -72,7 +73,7 @@ public class CustomerController {
             model.addAttribute("customers", new Customer());
         } else {
             Customer customer = customerOptional.get();
-            if (customer.getDeleted()) {
+            if (customer.isDeleted()) {
                 model.addAttribute("errors", true);
                 model.addAttribute("message", "This customer is suspended");
             } else {
@@ -113,8 +114,23 @@ public class CustomerController {
         }
         return "customer/withdraw";
     }
-    @GetMapping("/transfer/{customerId}")
-    public String showTransferForm(@PathVariable Long customerId, Model model,){
+
+    @GetMapping("/transfer/{senderId}")
+    public String showTransferForm(@PathVariable Long senderId, Model model) {
+        Optional<Customer> senderOptional = customerService.findById(senderId);
+        if (!senderOptional.isPresent()) {
+            model.addAttribute("error", true);
+            model.addAttribute("message", "Sender ID invalid");
+        } else {
+            List<Customer> recipient = customerService.findAllByIdNot(senderId);
+            Customer sender = senderOptional.get();
+
+            model.addAttribute("error", null);
+            model.addAttribute("sender", sender);
+            model.addAttribute("recipient", recipient);
+            model.addAttribute("transfer", new Transfer());
+        }
+        return "customer/transfer";
 
     }
 
@@ -201,9 +217,61 @@ public class CustomerController {
 
             model.addAttribute("errors", false);
             model.addAttribute("customers", customer);
-            model.addAttribute("withdraw",new Withdraw());
+            model.addAttribute("withdraw", new Withdraw());
         }
         return "customer/withdraw";
     }
 
+    @PostMapping("/transfer/{senderId}")
+    public String transfer(@PathVariable Long senderId, Transfer transfer, Model model) {
+        Optional<Customer> senderOptional = customerService.findById(senderId);
+
+        if (!senderOptional.isPresent()) {
+            model.addAttribute("error", true);
+            model.addAttribute("message", "Sender ID is invalid");
+        } else {
+            Customer sender = senderOptional.get();
+            Long recipientId = transfer.getRecipient().getId();
+
+            if (recipientId.equals(senderId)) {
+                model.addAttribute("error", true);
+                model.addAttribute("message", "Sender can't be same with Recipient");
+            }
+            Optional<Customer> recipientOptional = customerService.findById(recipientId);
+            if (!recipientOptional.isPresent()) {
+                model.addAttribute("error", true);
+                model.addAttribute("message", "Recipient ID  is invalid");
+            } else {
+                BigDecimal senderBalance = sender.getBalance();
+                BigDecimal transferAmount = transfer.getTransactionAmount();
+                Long fees = 10L;
+                BigDecimal feesAmount = transferAmount.multiply(BigDecimal.valueOf(fees).divide(BigDecimal.valueOf(100L)));
+                BigDecimal transactionAmount = transferAmount.add(feesAmount);
+
+                if (senderBalance.compareTo(transactionAmount) < 0) {
+                    model.addAttribute("error", true);
+                    model.addAttribute("message", "Balance not enough to transfer");
+                } else{
+                    Customer recipient = recipientOptional.get();
+
+                    transfer.setSender(sender);
+                    transfer.setTransferAmount(transferAmount);
+                    transfer.setFees(fees);
+                    transfer.setRecipient(recipient);
+                    transfer.setTransactionAmount(transactionAmount);
+                    transfer.setFeeAmount(feesAmount);
+
+                    customerService.transfer(transfer);
+                    model.addAttribute("error",  false);
+                    sender.setBalance(sender.getBalance().subtract(transactionAmount));
+                }
+            }
+        }
+        List<Customer> recipient  = customerService.findAllByIdNot(senderId);
+
+        model.addAttribute("sender", senderId);
+        model.addAttribute("recipient", recipient);
+        model.addAttribute("transfer",new Transfer());
+        return "customer/transfer";
+    }
 }

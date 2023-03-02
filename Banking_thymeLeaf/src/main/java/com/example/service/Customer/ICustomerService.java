@@ -2,6 +2,7 @@ package com.example.service.Customer;
 
 import com.example.model.Customer;
 import com.example.model.Deposit;
+import com.example.model.Transfer;
 import com.example.model.Withdraw;
 import com.example.service.IGeneralService;
 
@@ -16,4 +17,6 @@ public interface ICustomerService extends IGeneralService<Customer> {
     void deposit(Customer customer, Deposit deposit);
 
     void withdraw(Customer customer, Withdraw withdraw);
+
+    void transfer(Transfer transfer);
 }

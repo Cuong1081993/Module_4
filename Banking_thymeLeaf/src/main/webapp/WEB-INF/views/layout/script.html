@@ -14,4 +14,16 @@
 
   <!-- App js -->
   <script src="/assets/js/app.min.js"></script>
+  <script>
+    document.getElementById("transferAmount").addEventListener("input", () => {
+      let transferAmount = document.getElementById("transferAmount").value;
+      let fees = 10;
+      let feesAmount = +transferAmount * fees / 100;
+      let transactionAmount = +transferAmount + feesAmount;
+
+      document.getElementById("transactionAmount").value = transactionAmount;
+    })
+
+
+  </script>
 </th:block>
