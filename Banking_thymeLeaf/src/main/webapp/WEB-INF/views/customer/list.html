@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+
+<head>
+    <title> Welcome to HomePage</title>
+    <th:block th:replace="layout/head"/>
+</head>
+<body>
+
+<!-- Begin page -->
+<div id="wrapper">
+
+    <!-- Topbar Start -->
+    <th:block th:replace="/layout/nav-bar"/>
+    <!-- end Topbar -->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <th:block th:replace="/layout/left-side-bar"/>
+    <!-- Left Sidebar End -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <div class="content-page p-1">
+        <div class="col-lg-12">
+            <div class="card-box">
+                <div class="d-flex justify-content-between">
+                    <h4 class="header-title">Customer Information</h4>
+                    <a class="btn btn-outline-secondary" th:href="@{/customers/create}">
+                        <i class="fas fa-plus-square"></i>
+                        <span>Create New Customer</span>
+                    </a>
+                </div>
+                <div class="table-responsive p-3">
+                    <table class="table table-dark mb-0">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Balance</th>
+                            <th colspan="5" style="text-align: center">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="item:${customers}">
+                            <tr>
+                                <td th:text="${item.id}"></td>
+                                <td th:text="${item.fullName}"></td>
+                                <td th:text="${item.email}"></td>
+                                <td th:text="${item.phone}"></td>
+                                <td th:text="${item.address}"></td>
+                                <td th:text="${item.balance}"></td>
+                                <td class="text-center">
+                                    <a class="btn btn-outline-secondary" title="Edit" data-toggle="tooltip"
+                                       th:href="@{/customers/edit/__${item.id}__}">
+                                        <i class="fas fa-pen-square" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-outline-success" title="Deposit" data-toggle="tooltip"
+                                       th:href="@{/customers/deposit/__${item.id}__}">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-outline-warning" title="Withdraw" data-toggle="tooltip"
+                                       th:href="@{/customers/withdraw/__${item.id}__}">
+                                        <i class="fa fa-minus" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-outline-primary" title="Transfer" data-toggle="tooltip"
+                                       th:href="@{/customers/transfer/__${item.id}__}">
+                                        <i class="fas fa-exchange-alt" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-outline-danger" title="Suspended" data-toggle="tooltip"
+                                       th:href="@{/customers/delete/__${item.id}__}">
+                                        <i class="fa fa-ban" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div> <!-- end card-box -->
+        </div> <!-- end col -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+</div>
+<!-- END wrapper -->
+
+<!-- Right Sidebar -->
+<th:block th:replace="/layout/right-bar"/>
+<!-- /Right-bar -->
+
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>
+
+<th:block th:replace="/layout/footer"/>
+<th:block th:replace="/layout/script"/>
+</body>
+</html>

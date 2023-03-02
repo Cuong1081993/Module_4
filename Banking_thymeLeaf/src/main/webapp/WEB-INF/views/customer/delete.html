@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+
+<head>
+    <title> Welcome to HomePage</title>
+    <th:block th:replace="layout/head"/>
+</head>
+<body>
+
+<!-- Begin page -->
+<div id="wrapper">
+
+    <!-- Topbar Start -->
+    <th:block th:replace="/layout/nav-bar"/>
+    <!-- end Topbar -->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <th:block th:replace="/layout/left-side-bar"/>
+    <!-- Left Sidebar End -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page">
+        <div class="container">
+            <div class="table-title">
+                <div class="row d-flex justify-content-between">
+                    <div class="col-sm-5">
+                        <h1>Delete customers</h1>
+                        <a th:href="@{/customers}" class="btn btn-outline-secondary">
+                            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                            <span>
+                            <i class="fas fa-list"></i>
+                            List of customers
+                    </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <form method="post" th:object="${customers}">
+                        <div class="row mt-3">
+                            <div class="col-sm-6">
+                                <label class="form-label"><strong>Full name</strong></label>
+                                <input type="text" class="form-control" readonly th:field="*{fullName}">
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label"><strong>Email</strong></label>
+                                <input type="text" class="form-control" readonly  th:field="*{email}">
+
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-sm-6">
+                                <label class="form-label"><strong>Phone</strong></label>
+                                <input type="text" class="form-control" readonly th:field="*{phone}">
+
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label"><strong>Address</strong></label>
+                                <input type="text" class="form-control" readonly th:field="*{address}">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-3">
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="fas fa-plus"></i>
+                                    Deleted
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+</div>
+<!-- END wrapper -->
+
+<!-- Right Sidebar -->
+<th:block th:replace="/layout/right-bar"/>
+<!-- /Right-bar -->
+
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>
+
+<th:block th:replace="/layout/footer"/>
+<th:block th:replace="/layout/script"/>
+</body>
+</html>

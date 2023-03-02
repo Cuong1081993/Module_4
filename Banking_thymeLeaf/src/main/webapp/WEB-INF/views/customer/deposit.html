@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+
+<head>
+    <title> Welcome to HomePage</title>
+    <th:block th:replace="layout/head"/>
+</head>
+<body>
+
+<!-- Begin page -->
+<div id="wrapper">
+
+    <!-- Topbar Start -->
+    <th:block th:replace="/layout/nav-bar"/>
+    <!-- end Topbar -->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <th:block th:replace="/layout/left-side-bar"/>
+    <!-- Left Sidebar End -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="container">
+            <div class="table-title">
+                <div class="row d-flex justify-content-between">
+                    <div class="col-sm-5">
+                        <h1>Deposit</h1>
+                        <a th:href="@{/customers}" class="btn btn-outline-secondary">
+                            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                            <span>
+                            <i class="fas fa-list"></i>
+                            List of customers
+                             </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <form method="post" th:object="${customers}">
+                        <div class="row mt-3">
+                            <div class="col-sm-6">
+                                <label for="id" class="form-label"><strong>ID</strong></label>
+                                <input type="text" id="id" th:field="*{id}" class="form-control" readonly>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="fullName" class="form-label"><strong>Full name</strong></label>
+                                <input type="text" id="fullName" th:field="*{fullName}" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-sm-6">
+                                <label for="balance" class="form-label">
+                                    <strong>Balance</strong>
+                                </label>
+                                <input type="text" id="balance" th:field="*{balance}" class="form-control" readonly>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="transactionAmount" class="form-label">
+                                    <strong>Transaction Amount
+                                        ($)</strong>
+                                </label>
+                                <div th:object="${deposit}">
+                                    <input type="number" class="form-control" id="transactionAmount"
+                                           name="transactionAmount" th:field="*{transactionAmount}"/>
+                                    <span th:if="${#fields.hasErrors('transactionAmount')}"
+                                          th:errors="*{transactionAmount}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-3">
+                                <button type="submit" class="btn btn-outline-success">
+                                    <i class="fas fa-plus"></i>
+                                    Deposit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+</div>
+<!-- END wrapper -->
+
+<!-- Right Sidebar -->
+<th:block th:replace="/layout/right-bar"/>
+<!-- /Right-bar -->
+
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>
+
+<th:block th:replace="/layout/footer"/>
+<th:block th:replace="/layout/script"/>
+</body>
+</html>
