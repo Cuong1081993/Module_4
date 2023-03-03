@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+
+<head>
+    <title> Transaction List</title>
+    <th:block th:replace="layout/head"/>
+</head>
+<body>
+
+<!-- Begin page -->
+<div id="wrapper">
+
+    <!-- Topbar Start -->
+    <th:block th:replace="/layout/nav-bar"/>
+    <!-- end Topbar -->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <th:block th:replace="/layout/left-side-bar"/>
+    <!-- Left Sidebar End -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page p-2">
+        <div class="card-box">
+            <div class="row d-flex justify-content-between">
+                <h4 class="col-lg-6">Transaction History</h4>
+                <a class="btn btn-outline-secondary col-md-3" th:href="@{/customers}">
+                    <i class="fas fa-plus-square"></i>
+                    <span>List of Customer</span>
+                </a>
+            </div>
+            <div class="table-responsive p-3">
+                <table class="table table-dark mb-0">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Sender Name</th>
+                        <th class="text-center">Recipient Name</th>
+                        <th class="text-center">Transaction Amount ($)</th>
+                        <th class="text-center">Fees (%)</th>
+                        <th class="text-center">Transfer Amount ($)</th>
+                        <th class="text-center">Fees Amount ($)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="item : ${transfers}">
+                        <tr>
+                            <td th:text="*{item.getSender().fullName}"></td>
+                            <td th:text="*{item.getRecipient().fullName}"></td>
+                            <td th:text="*{item.getTransactionAmount()}"></td>
+                            <td th:text="*{item.getFees()}"></td>
+                            <td th:text="*{item.getTransferAmount()}"></td>
+                            <td th:text="*{item.getFeeAmount()}"></td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+</div>
+<!-- END wrapper -->
+
+<!-- Right Sidebar -->
+<th:block th:replace="/layout/right-bar"/>
+<!-- /Right-bar -->
+
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>
+
+<th:block th:replace="/layout/footer"/>
+<th:block th:replace="/layout/script"/>
+</body>
+</html>

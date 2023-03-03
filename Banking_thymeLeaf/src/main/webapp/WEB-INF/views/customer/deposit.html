@@ -29,12 +29,13 @@
                 <div class="row d-flex justify-content-between">
                     <div class="col-sm-5">
                         <h1>Deposit</h1>
-                        <a th:href="@{/customers}" class="btn btn-outline-secondary">
-                            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-                            <span>
-                            <i class="fas fa-list"></i>
-                            List of customers
-                             </span>
+                        <a class="btn btn-outline-secondary mr-3" th:ref="@{/customers/history}">
+                            <i class="fa fa-history" aria-hidden="true"></i>
+                            <span> Transaction History</span>
+                        </a>
+                        <a class="btn btn-outline-secondary" th:href="@{/customers}">
+                            <i class="fas fa-plus-square"></i>
+                            <span>List of Customer</span>
                         </a>
                     </div>
                 </div>

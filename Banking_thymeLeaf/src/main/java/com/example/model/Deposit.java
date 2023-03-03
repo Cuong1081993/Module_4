@@ -1,11 +1,14 @@
 package com.example.model;
 
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "deposits")
-public class Deposit extends ModelGeneral{
+public class Deposit extends ModelGeneral implements Validator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,5 +51,20 @@ public class Deposit extends ModelGeneral{
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return Deposit.class.isAssignableFrom(clazz);
+    }
+
+    @Override
+    public void validate(Object target, Errors errors) {
+        Deposit deposit = (Deposit) target;
+
+        String transactionAmount = String.valueOf(deposit.getTransactionAmount());
+        if (transactionAmount.length() == 0){
+            errors.rejectValue("transactionAmount","transactionAmount.null");
+        }
     }
 }

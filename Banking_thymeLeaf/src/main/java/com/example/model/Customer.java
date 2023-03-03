@@ -101,13 +101,14 @@ public class Customer extends ModelGeneral implements Validator {
 
         if (fullName.length() == 0) {
             errors.rejectValue("fullName", "fullName.null");
-        } else {
+        }
+        else {
             if (fullName.length() < 4 || fullName.length() > 25){
                 errors.rejectValue("fullName","fullName.length");
             }
         }
-        if (email.length() == 0) {
 
+        if (email.length() == 0) {
             errors.rejectValue("email","email.null");
         }
         else {
