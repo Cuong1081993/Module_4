@@ -56,7 +56,7 @@
                         <label>Recipient Name</label>
                         <select th:field="*{recipient.id}" class="form-control">
                             <th:block th:each="item : ${recipients}">
-                                <option th:value="${item.id}" th:text="${item.fullName}"></option>
+                                <option th:value="${item.id}" th:text="${'(' + item.id + ') - ' + item.fullName}"></option>
                             </th:block>
                         </select>
                     </div>

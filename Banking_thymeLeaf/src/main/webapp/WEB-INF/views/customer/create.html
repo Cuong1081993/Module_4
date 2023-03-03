@@ -96,7 +96,11 @@
         </ul>
     </div>
 </th:block>
-
+<th:block th:if="${success == true}">
+    <div class="notification">
+        <p class="label-success" th:text="${message}"></p>
+    </div>
+</th:block>
 
 <th:block th:replace="/layout/footer"/>
 <th:block th:replace="/layout/script"/>

@@ -44,7 +44,6 @@ public class CustomerController {
     }
 
 
-
     @GetMapping("/create")
     public String showCreatePage(Model model) {
         model.addAttribute("customer", new Customer());
@@ -93,13 +92,14 @@ public class CustomerController {
     public String showDepositForm(@PathVariable Long customerId, Model model) {
         Optional<Customer> customerOptional = customerService.findById(customerId);
         if (!customerOptional.isPresent()) {
-            model.addAttribute("errors", true);
+            model.addAttribute("error", true);
             model.addAttribute("message", "Customer ID invalid");
+            return "error/404";
 
         } else {
             Customer customer = customerOptional.get();
-            model.addAttribute("errors", null);
-            model.addAttribute("customers", customer);
+            model.addAttribute("error", null);
+            model.addAttribute("customer", customer);
             model.addAttribute("deposit", new Deposit());
         }
         return "customer/deposit";
@@ -127,7 +127,7 @@ public class CustomerController {
             model.addAttribute("error", true);
             model.addAttribute("message", "Sender ID invalid");
         } else {
-            List<Customer> recipients = customerService.findAllByIdNot(senderId);
+            List<Customer> recipients = customerService.findAllByIdNotAndDeletedIsFalse(senderId);
             Customer sender = senderOptional.get();
 
             model.addAttribute("error", null);
@@ -154,7 +154,10 @@ public class CustomerController {
         customerService.save(customer);
         model.addAttribute("customer", new Customer());
 
-        return "redirect:/customers";
+        model.addAttribute("success", true);
+        model.addAttribute("message", "Create Successfully !");
+
+        return "redirect:/customers/create";
     }
 
     @PostMapping("/edit/{customerId}")
@@ -187,12 +190,13 @@ public class CustomerController {
     }
 
     @PostMapping("/deposit/{customerId}")
-    public String deposit(@PathVariable Long customerId, Model model, Deposit deposit) {
-
+    public String deposit(@PathVariable Long customerId,  Deposit deposit, BindingResult bindingResult, Model model) {
+     new Deposit().validate(deposit,bindingResult);
         Optional<Customer> customerOptional = customerService.findById(customerId);
         if (!customerOptional.isPresent()) {
-            model.addAttribute("errors", true);
+            model.addAttribute("error", true);
             model.addAttribute("message", "Customer ID invalid");
+            model.addAttribute("customer", customerOptional.get());
         } else {
             Customer customer = customerOptional.get();
             BigDecimal currentBalance = customer.getBalance();
@@ -201,10 +205,14 @@ public class CustomerController {
             customer.setBalance(newBalance);
 
             customerService.deposit(customer, deposit);
+
             model.addAttribute("errors", false);
-            model.addAttribute("customers", customer);
-            model.addAttribute("deposit", new Deposit());
+            model.addAttribute("deposit", deposit);
+            model.addAttribute("success", true);
+            model.addAttribute("message", "Deposit Successfully");
+            model.addAttribute("customer", customer);
         }
+
         return "customer/deposit";
     }
 

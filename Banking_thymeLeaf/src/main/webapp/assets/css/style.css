@@ -13,3 +13,9 @@ table thead th,table tbody td {
 .alert-danger h5 {
     color: red;
 }
+.notification{
+    bottom: 58px;
+    position: fixed;
+    width: 100%;
+    margin-left: 241px;
+}

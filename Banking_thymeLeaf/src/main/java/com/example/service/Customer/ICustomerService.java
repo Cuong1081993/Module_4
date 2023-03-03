@@ -13,6 +13,7 @@ public interface ICustomerService extends IGeneralService<Customer> {
 
     List<Customer> findAllByDeletedIsFalse();
 
+    List<Customer> findAllByIdNotAndDeletedIsFalse(Long id);
 
     void deposit(Customer customer, Deposit deposit);
 

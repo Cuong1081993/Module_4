@@ -13,6 +13,7 @@ import java.util.List;
 public interface CustomerRepository extends JpaRepository<Customer, Long>  {
 
     List<Customer> findAllByIdNot(Long id);
+    List<Customer> findAllByIdNotAndDeletedIsFalse(Long id);
 
     List<Customer> findAllByDeletedIsFalse();
     @Modifying

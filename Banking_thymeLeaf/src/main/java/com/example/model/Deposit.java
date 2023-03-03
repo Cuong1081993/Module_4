@@ -1,9 +1,12 @@
 package com.example.model;
 
+
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
 @Entity
@@ -13,12 +16,14 @@ public class Deposit extends ModelGeneral implements Validator {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "transaction_amount",precision = 12, scale = 1,nullable = false )
-    private BigDecimal transactionAmount;
-
     @ManyToOne(targetEntity = Customer.class)
-    @JoinColumn(name = "customer_id",referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
+
+    //
+    @Column(name = "transaction_amount", precision = 12, scale = 0, nullable = false)
+
+    private BigDecimal transactionAmount;
 
     public Deposit(Long id, BigDecimal transactionAmount, Customer customer) {
         this.id = id;
@@ -53,6 +58,7 @@ public class Deposit extends ModelGeneral implements Validator {
         this.customer = customer;
     }
 
+
     @Override
     public boolean supports(Class<?> clazz) {
         return Deposit.class.isAssignableFrom(clazz);
@@ -61,9 +67,8 @@ public class Deposit extends ModelGeneral implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Deposit deposit = (Deposit) target;
-
-        String transactionAmount = String.valueOf(deposit.getTransactionAmount());
-        if (transactionAmount.length() == 0){
+        BigDecimal transactionAmount = deposit.getTransactionAmount();
+        if (transactionAmount.toString().length()==0){
             errors.rejectValue("transactionAmount","transactionAmount.null");
         }
     }

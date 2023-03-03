@@ -29,7 +29,7 @@
                 <div class="row d-flex justify-content-between">
                     <div class="col-sm-5">
                         <h1>Deposit</h1>
-                        <a class="btn btn-outline-secondary mr-3" th:ref="@{/customers/history}">
+                        <a class="btn btn-outline-secondary mr-3" th:href="@{/transfer}">
                             <i class="fa fa-history" aria-hidden="true"></i>
                             <span> Transaction History</span>
                         </a>
@@ -42,7 +42,7 @@
             </div>
             <div>
                 <div>
-                    <form method="post" th:object="${customers}">
+                    <form method="post" th:object="${customer}">
                         <div class="row mt-3">
                             <div class="col-sm-6">
                                 <label for="id" class="form-label"><strong>ID</strong></label>
@@ -97,7 +97,20 @@
 <!-- /Right-bar -->
 
 <!-- Right bar overlay-->
-<div class="rightbar-overlay"></div>
+<th:block th:if="${errors == true}">
+    <div class="alert-danger">
+        <h5>Please correct errors below:</h5>
+        <ul>
+            <li class="label-error" th:each="err : ${#fields.errors('deposit.*')}" th:text="${err}"></li>
+        </ul>
+    </div>
+</th:block>
+<th:block th:if="${success == true}">
+    <div class="notification">
+        <p class="label" th:text="${message}"></p>
+    </div>
+</th:block>
+
 
 <th:block th:replace="/layout/footer"/>
 <th:block th:replace="/layout/script"/>
