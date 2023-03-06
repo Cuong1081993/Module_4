@@ -190,11 +190,15 @@ public class CustomerController {
     }
 
     @PostMapping("/deposit/{customerId}")
-    public String deposit(@PathVariable Long customerId,  Deposit deposit, BindingResult bindingResult, Model model) {
-     new Deposit().validate(deposit,bindingResult);
-        Optional<Customer> customerOptional = customerService.findById(customerId);
+    public String deposit(@PathVariable Long customerId, @Validated Deposit deposit, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasFieldErrors()){
+            model.addAttribute("errors", true);
+            model.addAttribute("deposit",deposit);
+            return "customer/deposit";
+        }
+            Optional<Customer> customerOptional = customerService.findById(customerId);
         if (!customerOptional.isPresent()) {
-            model.addAttribute("error", true);
+            model.addAttribute("errors", true);
             model.addAttribute("message", "Customer ID invalid");
             model.addAttribute("customer", customerOptional.get());
         } else {

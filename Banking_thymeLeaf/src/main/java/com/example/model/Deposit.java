@@ -7,11 +7,12 @@ import org.springframework.validation.Validator;
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "deposits")
-public class Deposit extends ModelGeneral implements Validator {
+public class Deposit extends ModelGeneral {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,7 +23,7 @@ public class Deposit extends ModelGeneral implements Validator {
 
     //
     @Column(name = "transaction_amount", precision = 12, scale = 0, nullable = false)
-
+    @NotNull(message = "TransactionAmount cannot null")
     private BigDecimal transactionAmount;
 
     public Deposit(Long id, BigDecimal transactionAmount, Customer customer) {
@@ -58,18 +59,4 @@ public class Deposit extends ModelGeneral implements Validator {
         this.customer = customer;
     }
 
-
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return Deposit.class.isAssignableFrom(clazz);
-    }
-
-    @Override
-    public void validate(Object target, Errors errors) {
-        Deposit deposit = (Deposit) target;
-        BigDecimal transactionAmount = deposit.getTransactionAmount();
-        if (transactionAmount.toString().length()==0){
-            errors.rejectValue("transactionAmount","transactionAmount.null");
-        }
-    }
 }
