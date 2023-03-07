@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/bootstrap/v5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fontawesome/v5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="assets/sweetalert2/v11.7.0/sweetalert2.all.min.js">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container-fluid mt-2">
+        <header>
+            <div class="col-lg-12">
+                <div class="col-lg-6 float-start">
+                    <h1> LIST OF CUSTOMER</h1>
+                </div>
+                <div class="col-lg-6 float-start text-right">
+                    <a href="/histories/transfers">
+                        <button class="btn btn-outline-light">
+                            <i class="fa fa-bars"></i>
+                            Transfer History 
+                     </button>
+                    </a>
+                    <button type="button" class="btn btn-outline-light" id="btnShowCreateModal">
+                        <i  class="fa fa-plus"></i>
+                        Create New Customer
+                    </button>
+                </div>
+            </div>
+        </header>
+        <div class="content-page">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Balance</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        <!-- MODAL CREATE -->
+        <div class="modal fade" id="modalCreateCustomer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5"> Create Customer</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-alert-danger hide">
+
+                        </div>
+                        <form id="frmCreateCustomer" method="post">
+                            <div class="row mt-3">
+                                <div class="col-sm-6">
+                                    <label>Full Name</label>
+                                    <input type="text" name="fullNameCre" id="fullNameCre" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Phone</label>
+                                    <input type="tel" name="phoneCre" id="phoneCre" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-sm-6">
+                                    <label>Address</label>
+                                    <input type="text" name="addressCre" id="addressCre" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Email</label>
+                                    <input type="email" name="emailCre" id="emailCre" class="form-control">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer p-lg-2">
+                        <button type="button" class="btn btn-outline-primary m-3" id="btnCreate">
+                            <i class="fa fa-plus"></i>
+                            Create
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END MODAL CREATE -->
+
+
+        <!-- MODAL UPDATE -->
+        <div class="modal fade" id="modalUpdateCustomer">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title"> Update Customer</h1>
+                        <button type="button" class="btn-close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="frmUpdateCustomer" method="post">
+                            <div class="row mt-3">
+                                <div class="col-sm-6">
+                                    <label>Full Name</label>
+                                    <input type="text" name="fullNameUp" id="fullNameUp" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Email</label>
+                                    <input type="email" name="emailUp" id="emailUp" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-sm-6">
+                                    <label>Phone</label>
+                                    <input type="tel" name="phoneUp" id="phoneUp" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Address</label>
+                                    <input type="text" name="addressUp" id="addressUp" class="form-control">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer p-lg-2">
+                        <button type="button" class="btn btn-outline-primary m-3" id="btnUpdate">
+                            <i class="fa fa-pencil-alt"></i>
+                            Update
+                        </button>
+                        <button type="button" class="btn btn-secondary">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  END MODAL UPDATE -->
+    
+    </div>
+    <script src="assets/bootstrap/v5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/jquery/v3.6.3/jquery-3.6.3.min.js"></script>
+    <script>
+        let customer={};
+
+        function getAllCustomers(){
+
+        }
+        function renderCustomer(item){
+            return `
+                <tr id="tr_${item.id}">
+                    <td class="text-center">${item.id}</td>
+                    <td>${item.fullName}</td>
+                    <td class="text-center">${item.email}</td>
+                    <td class="text-center">${item.phone}</td>
+                    <td class="text-end">${item.balance}</td>
+                    <td>
+                        <button class="btn btn-outline-secondary update" data-id="${item.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-success deposit" data-id="${item.id}">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-warning">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary transfer" data-id="${item.id}">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-danger delete" data-id="${item.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }
+        $("#modalCreateCustomer").on("hidden.bs.modal",() => {
+            $("#frmCreateCustomer")[0].reset();
+        })
+        $("#btnShowCreateModal").on("click",()=>{
+            $("#modalCreateCustomer").modal("show");
+        })
+    </script>
+</body>
+</html>
