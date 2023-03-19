@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/assets/css/login.css">
+</head>
+<body>
+<div class="form-structor">
+    <div class="signup">
+        <h2 class="form-title" id="signup">
+            <span>or</span>
+            Sign up
+        </h2>
+        <div class="form-holder">
+            <select class="input-select" name="roleUp" id="roleUp">
+                <option value="1">ADMIN</option>
+                <option value="2">USER</option>
+            </select>
+            <input type="email" class="input" placeholder="Email" id="usernameUp" name="usernameUp"/>
+            <input type="password" class="input" placeholder="Password" id="passwordUp" name="passwordUp"/>
+        </div>
+        <button class="submit-btn" id="btnSignUp">Sign up</button>
+    </div>
+    <div class="login slide-up">
+        <div class="center">
+            <h2 class="form-title" id="login">
+                <span>or</span>
+                Log in
+            </h2>
+            <div class="form-holder">
+                <input type="email" class="input" placeholder="Email" id="usernameIn" name="usernameIn"/>
+                <input type="password" class="input" placeholder="Password" id="passwordIn" name="passwordIn"/>
+            </div>
+            <button class="submit-btn" id="btnLogin">Log in</button>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/login.js"></script>
+<script src="/assets/jquery/v3.6.3/jquery-3.6.3.min.js"></script>
+
+<script>
+    let btnSignUp = $("#btnSignUp");
+    let btnLogin = $("#btnLogin");
+
+    btnSignUp.on("click", () => {
+        let user = {
+            username: $("#usernameUp").val(),
+            password: $("#passwordUp").val(),
+            role: {
+                id: $("#roleUp").val()
+            }
+        }
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: "http://localhost:8093/api/auth/register",
+            data: JSON.stringify(user)
+        })
+            .done(() => {
+                $("#login").click();
+                $("#usernameIn").val(user.username);
+                $("#passwordIn").val(user.password);
+            })
+            .fail((error) => {
+                console.log(error);
+                alert("Register fail");
+            })
+    })
+
+    btnLogin.on("click", () => {
+        let user = {
+            username: $("#usernameIn").val(),
+            password: $("#passwordIn").val()
+        }
+
+        $.ajax({
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "POST",
+            url: "http://localhost:8093/api/auth/login",
+            data: JSON.stringify(user)
+        })
+            .done((data) => {
+                console.log(data)
+                location.href = "/products";
+            })
+            .fail((error) => {
+                console.log(error);
+                alert("Login fail");
+            })
+    })
+</script>
+</body>
+
+</html>
