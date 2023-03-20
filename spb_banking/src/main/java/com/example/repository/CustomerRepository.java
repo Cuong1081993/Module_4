@@ -18,12 +18,12 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     List<Customer> findAllByDeletedIsFalse();
 
     @Query("SELECT NEW com.example.model.dto.CustomerDTO (" +
-            "cus.id, " +
-            "cus.fullName, " +
-            "cus.email, " +
-            "cus.phone, " +
-            "cus.balance, " +
-            "cus.locationRegion" +
+                "cus.id, " +
+                "cus.fullName, " +
+                "cus.email, " +
+                "cus.phone, " +
+                "cus.balance, " +
+                "cus.locationRegion" +
             ") " +
             "FROM Customer AS cus " +
             "WHERE cus.deleted = false "
@@ -33,15 +33,15 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     Boolean existsByEmail(String email);
 
     @Modifying
-    @Query("UPDATE Customer as c" +
-            "SET c.balance = c.balance + :transactionAmount" +
-            "WHERE c.id = :customerId"
+    @Query("UPDATE Customer as c " +
+            "SET c.balance = c.balance + :transactionAmount " +
+            "WHERE c.id = :customerId "
     )
     void incrementBalance(@Param("customerId") Long customerId,@Param("transactionAmount") BigDecimal transactionAmount);
 
     @Modifying
-    @Query("UPDATE Customer  as c " +
-            "SET c.balance = c.balance  - : transactionAmount" +
+    @Query("UPDATE Customer as c " +
+            "SET c.balance = c.balance  - :transactionAmount " +
             "WHERE c.id = :customerId"
     )
     void decrementBalance(@Param("customerId") Long customerId, @Param("transactionAmount")BigDecimal transactionAmount);

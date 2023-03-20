@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Of Customers</title>
+    <link rel="stylesheet" href="/assets/bootstrap/v5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/fontawesome/v5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/assets/sweetalert2/v11.7.0/sweetalert2.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+<div class="container-fluid mt-2">
+    <header>
+        <div class="col-lg-12">
+            <div class="col-lg-6 float-start">
+                <h1> LIST OF CUSTOMER</h1>
+            </div>
+            <div class="col-lg-6 float-start text-right">
+                <a href="/histories/transfers">
+                    <button class="btn btn-outline-light">
+                        <i class="fa fa-bars"></i>
+                        Transfer History
+                    </button>
+                </a>
+                <button type="button" class="btn btn-outline-light" id="btnShowCreateModal">
+                    <i class="fa fa-plus"></i>
+                    Create New Customer
+                </button>
+            </div>
+        </div>
+    </header>
+    <div class="content-page">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th class="text-center">Full Name</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Phone</th>
+                <th class="text-center">Address</th>
+                <th class="text-center">Province</th>
+                <th class="text-center">District</th>
+                <th class="text-center">Ward</th>
+                <th class="text-center">Balance</th>
+                <th colspan="5" style="text-align: center;">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <!-- MODAL CREATE -->
+    <th:block th:replace="customers/modalCreate :: modal_create"></th:block>
+
+    <!-- END MODAL CREATE -->
+
+    <!-- MODAL UPDATE -->
+    <th:block th:replace="customers/modalUpdate :: modal_update"></th:block>
+    <!--  END MODAL UPDATE -->
+
+    <!-- MODAL DEPOSIT -->
+    <th:block th:replace="customers/modalDeposit :: modal_deposit"></th:block>
+    <!-- END MODAL DEPOSIT -->
+
+    <!-- Modal Transfer -->
+    <th:block th:replace="customers/modalTransfer :: modal_transfer"></th:block>
+    <!--  END Modal Transfer -->
+</div>
+
+<script src="/assets/jquery/v3.6.3/jquery-3.6.3.min.js"></script>
+<script src="/assets/bootstrap/v5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/sweetalert2/v11.7.0/sweetalert2.min.js"></script>
+<script src="/assets/js/appBase.js"></script>
+
+
+<script>
+    const page = {
+        urls: {
+            getAllCustomer: AppBase.API_CUSTOMER,
+            findCustomerById: AppBase.API_CUSTOMER,
+            doCreate: AppBase.API_CUSTOMER,
+            doUpdate: AppBase.API_CUSTOMER,
+            insertDeposit: AppBase.API_DEPOSIT,
+            insertWithdraw: AppBase.API_WITHDRAW,
+            insertTransfer: AppBase.API_TRANSFER,
+            incrementBalance: AppBase.API_CUSTOMER,
+            deIncrementBalance: AppBase.API_CUSTOMER,
+            getAllProvince: AppBase.API_PROVINCE,
+            getAllDistricts: AppBase.API_PROVINCE + '/district',
+            getAllWards: AppBase.API_PROVINCE + '/ward'
+        },
+        elements: {},
+        loadData: {},
+        commands: {},
+        dialogs: {
+            elements: {},
+            loadData: {},
+            commands: {}
+        }
+    }
+
+
+    let locationRegion = new LocationRegion();
+    let customer = new Customer();
+
+    let currentCustomerId;
+
+    page.elements.btnCreate = $('#btnCreate');
+    page.elements.btnUpdate = $('#btnUpdate');
+    page.elements.btnDeposit = $('#btnDeposit');
+    page.elements.btnWithdraw = $('#btnWithDraw');
+    page.elements.btnTransfer = $('#btnTransfer');
+
+    page.dialogs.elements.btnShowCreateModal = $('#btnShowCreateModal');
+    page.dialogs.elements.modalCreate = $('#modalCreateCustomer');
+    page.dialogs.elements.frmCreate = $('#frmCreate');
+    page.dialogs.elements.fullNameCre = $('#fullNameCre');
+    page.dialogs.elements.phoneCre = $('#phoneCre');
+    page.dialogs.elements.emailCre = $('#emailCre');
+    page.dialogs.elements.provinceCre = $('#provinceCre');
+    page.dialogs.elements.districtCre = $('#districtCre');
+    page.dialogs.elements.wardCre = $('#wardCre');
+    page.dialogs.elements.addressCre = $('#addressCre');
+
+    page.dialogs.elements.modalUpdate = $('#modalUpdate');
+    page.dialogs.elements.fullNameUp = $('#fullNameUp');
+    page.dialogs.elements.emailUp = $('#emailUp');
+    page.dialogs.elements.phoneUp = $('#phoneUp');
+    page.dialogs.elements.provinceUp = $('#provinceUp');
+    page.dialogs.elements.districtUp = $('#districtUp');
+    page.dialogs.elements.wardUp = $('#wardUp');
+    page.dialogs.elements.addressUp = $('#addressUp');
+
+    page.dialogs.elements.modalDeposit = $('#modalDeposit');
+    page.dialogs.elements.fullNameDep = $('#fullNameDep');
+    page.dialogs.elements.balanceDep = $('#balanceDep');
+    page.dialogs.elements.transactionAmountDep = $('#transactionAmountDep');
+
+
+    page.dialogs.elements.modalTransfer = $('#modalTransfer');
+    page.dialogs.elements.frmTransfer = $('#frmTransfer');
+    page.dialogs.elements.senderId = $('#senderId');
+    page.dialogs.elements.senderName = $('#senderName');
+    page.dialogs.elements.senderPhone = $('#senderPhone');
+    page.dialogs.elements.senderBalance = $('#senderBalance');
+    page.dialogs.elements.recipientTrf = $('#recipientTrf');
+    page.dialogs.elements.transferAmountTrf = $('#transferAmountTrf');
+    page.dialogs.elements.feesTrf = $('#feesTrf');
+    page.dialogs.elements.transactionAmountTrf = $('#transactionAmountTrf');
+    page.dialogs.elements.btnTransfer = $('#btnTransfer');
+
+
+    page.loadData.getAllCustomers = () => {
+        $.ajax({
+            type: 'GET',
+            url: page.urls.getAllCustomer
+        })
+            .done((data) => {
+
+                if (data.length > 0) {
+                    $.each((data), (i, customers) => {
+
+                        let str = renderCustomer(customers);
+                        $('table tbody').prepend(str);
+                    })
+                }
+            })
+    }
+
+    function renderCustomer(item) {
+        return `
+                <tr id="tr_${item.id}">
+                    <td class="text-center">${item.id}</td>
+                    <td class="text-center">${item.fullName}</td>
+                    <td class="text-center">${item.email}</td>
+                    <td class="text-center">${item.phone}</td>
+                    <td class="text-center">${item.locationRegion.address}</td>
+                    <td>${item.locationRegion.provinceName}</td>
+                    <td>${item.locationRegion.districtName}</td>
+                    <td>${item.locationRegion.wardName}</td>
+                    <td class="text-end">${item.balance}</td>
+                    <td style ="width : 2%">
+                        <button class="btn btn-outline-secondary update" data-id="${item.id}" data-bs-toggle="tooltip" data-bs-placement="top" title="Update">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                    <td style ="width : 2%">
+                        <button class="btn btn-outline-success deposit" data-id="${item.id}" data-bs-toggle="tooltip" data-bs-placement="top" title="Deposit">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </td>
+                    <td style ="width : 2%">
+                        <button class="btn btn-outline-warning withdraw"  data-id="${item.id}" data-bs-toggle="tooltip" data-bs-placement="top" title="WithDraw">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </td>
+                    <td style ="width : 2%">
+                        <button class="btn btn-outline-primary transfer" data-sender-id="${item.id}" data-bs-toggle="tooltip" data-bs-placement="top" title="Transfer">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </td>
+                    <td style ="width : 2%">
+                        <button class="btn btn-outline-danger delete" data-id="${item.id}" data-bs-toggle="tooltip" data-bs-placement="top" title="Suppened">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+    }
+
+    page.loadData.getAllProvinces = () => {
+        $.ajax({
+            type: "GET",
+            url: page.urls.getAllProvince
+        })
+            .done((data) => {
+                $.each(data.results, (i, item) => {
+                    let str = `<option value ='${item.province_id}'>${item.province_name}</option>`;
+                    page.dialogs.elements.provinceCre.append(str);
+                    page.dialogs.elements.provinceUp.append(str);
+                })
+                let str = `<option value="0" selected>-- Please selected --</option>`;
+                page.dialogs.elements.provinceCre.append(str);
+                page.dialogs.elements.provinceUp.append(str);
+
+                // page.commands.addEventChangeProvince();
+
+            })
+            .fail((error) => {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: "Can't get all provinces"
+                })
+            })
+    }
+
+    page.loadData.getAllDistrictsByProvinceId = (provinceId, elem) => {
+        return $.ajax({
+            tye: 'GET',
+            url: page.urls.getAllDistricts + '/' + provinceId
+        })
+            .done((data) => {
+                elem.empty();
+                elem.append(`<option>-- Please selected --</option>`)
+                let districts = data.results;
+                $.each(districts, (i, item) => {
+                    let str = `<option value="${item.district_id}">${item.district_name}</option>`;
+                    elem.append(str);
+                })
+            })
+            .fail(() => {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: "Can't get all districts"
+                })
+            })
+    }
+
+    page.loadData.getAllWardsByDistrictId = (districtId, elem) => {
+        return $.ajax({
+            type: 'GET',
+            url: page.urls.getAllWards + '/' + districtId
+        })
+            .done((data) => {
+                elem.empty();
+                elem.append(`<option>-- Please selected --</option>`)
+                let wards = data.results;
+
+                $.each(wards, (i, item) => {
+                    let str = `<option value ='${item.ward_id}'>${item.ward_name}</option>`;
+                    elem.append(str);
+
+                })
+            })
+            .fail((error) => {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: "Can't get all wards"
+                })
+            })
+    }
+
+    page.dialogs.elements.provinceCre.on('change', () => {
+
+        let provinceId = page.dialogs.elements.provinceCre.val();
+        page.loadData.getAllDistrictsByProvinceId(provinceId,page.dialogs.elements.districtCre).then(()=>{
+
+            let districtId = page.dialogs.elements.districtCre.val();
+            page.loadData.getAllWardsByDistrictId(districtId,page.dialogs.elements.wardCre)
+        });
+    })
+
+    page.dialogs.elements.districtCre.on('change',()=>{
+        let districtId = page.dialogs.elements.districtCre.val();
+        page.loadData.getAllWardsByDistrictId(districtId,page.dialogs.elements.wardCre);
+    })
+
+    page.dialogs.elements.provinceUp.on('change', () => {
+
+        let provinceId = page.dialogs.elements.provinceUp.val();
+        page.loadData.getAllDistrictsByProvinceId(provinceId,page.dialogs.elements.districtUp).then(()=>{
+
+            let districtId = page.dialogs.elements.districtUp.val();
+            page.loadData.getAllWardsByDistrictId(districtId,page.dialogs.elements.wardUp)
+        });
+    })
+
+    page.dialogs.elements.districtUp.on('change',()=>{
+        let districtId = page.dialogs.elements.districtUp.val();
+        page.loadData.getAllWardsByDistrictId(districtId,page.dialogs.elements.wardUp);
+    })
+
+    page.commands.doCreate = () => {
+        let fullName = page.dialogs.elements.fullNameCre.val();
+        let email = page.dialogs.elements.emailCre.val();
+        let phone = page.dialogs.elements.phoneCre.val();
+        let provinceId = page.dialogs.elements.provinceCre.val();
+        let provinceName = page.dialogs.elements.provinceCre.find('option:selected').text();
+        let districtId = page.dialogs.elements.districtCre.val();
+        let districtName = page.dialogs.elements.districtCre.find('option:selected').text();
+        let wardId = page.dialogs.elements.wardCre.val();
+        let wardName = page.dialogs.elements.wardCre.find("option:selected").text();
+        let address = page.dialogs.elements.addressCre.val();
+        let balance = 0;
+        let deleted = 0;
+        let locationRegion = {
+            provinceId,
+            provinceName,
+            districtId,
+            districtName,
+            wardId,
+            wardName,
+            address
+        }
+        let customer = {
+            fullName,
+            email,
+            phone,
+            locationRegion,
+            balance,
+            deleted
+        }
+        $.ajax({
+            headers: {
+                'accept': 'application/json',
+                'content-type': 'application/json'
+            },
+            type: 'POST',
+            url: page.urls.doCreate,
+            data: JSON.stringify(customer)
+        })
+            .done((data) => {
+                customer = data;
+                page.dialogs.elements.modalCreate.modal("hide");
+                let str = renderCustomer(data);
+                $('table tbody').prepend(str);
+
+                $('.update').off('click');
+                $('.delete').off('click');
+                $('.deposit').off('click');
+                $('.transfer').off('click');
+
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Create Customer Successfully',
+                    showConfirmButton: false,
+                    timer: 5000
+                })
+                page.dialogs.elements.modalCreate.modal('hide');
+            })
+            .fail((error) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Create Customer went wrong!',
+                })
+            })
+    }
+
+    function addEventUpdateClick() {
+        $('.update').on('click', function () {
+            let customerId = $(this).data('id');
+
+            page.loadData.findCustomerById(customerId).then((data) => {
+
+                customer = data;
+                locationRegion = customer.locationRegion;
+                currentCustomerId = customerId;
+
+                page.dialogs.elements.fullNameUp.val(customer.fullName);
+                page.dialogs.elements.emailUp.val(customer.email);
+                page.dialogs.elements.phoneUp.val(customer.phone);
+                page.dialogs.elements.provinceUp.val(locationRegion.provinceId);
+
+                page.loadData.getAllDistrictsByProvinceId(locationRegion.provinceId, page.dialogs.elements.districtUp).then(() => {
+                    page.dialogs.elements.districtUp.val(locationRegion.districtId);
+
+                    page.loadData.getAllWardsByDistrictId(locationRegion.districtId, page.dialogs.elements.wardUp).then(() => {
+                        page.dialogs.elements.wardUp.val(locationRegion.wardId);
+                    });
+                });
+                page.dialogs.elements.addressUp.val(locationRegion.address);
+                page.dialogs.elements.modalUpdate.modal('show');
+            })
+                .catch((error) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Customer is Invalid!',
+                    })
+                })
+        })
+    }
+
+    page.dialogs.elements.modalCreate.on('hidden.bs.modal', () => {
+        page.dialogs.elements.frmCreate[0].reset();
+    })
+    page.dialogs.elements.btnShowCreateModal.on('click', () => {
+        page.dialogs.elements.modalCreate.modal('show');
+    })
+
+    page.commands.loadData = () => {
+        page.loadData.getAllCustomers();
+        page.loadData.getAllProvinces();
+    }
+
+
+    page.initializeControlEvent = () => {
+        page.elements.btnCreate.on('click', function () {
+            page.commands.doCreate();
+        })
+    }
+    $(() => {
+        page.commands.loadData();
+        page.initializeControlEvent();
+    })
+
+
+</script>
+</body>
+</html>

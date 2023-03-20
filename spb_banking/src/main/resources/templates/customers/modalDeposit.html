@@ -1,0 +1,44 @@
+<th:block th:fragment="modal_deposit">
+  <div class="modal fade" id="modalDeposit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Modal deposit</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            <div class="row mt-3">
+              <div class="col-lg-6">
+                <label>Customer ID</label>
+                <input type="text" class="form-control" id="idDep" readonly/>
+              </div>
+              <div class="col-lg-6">
+                <label>Full Name</label>
+                <input type="text" class="form-control" id="fullNameDep" readonly/>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-lg-6">
+                <label>Balance</label>
+                <input type="text" class="form-control" id="balanceDep" readonly/>
+              </div>
+              <div class="col-lg-6">
+                <label>Transaction Amount</label>
+                <input type="text" class="form-control" id="transactionAmountDep"/>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" id="btnDeposit" class="btn btn-outline-success">
+            <i class="fas fa-plus"></i>
+            Deposit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</th:block>

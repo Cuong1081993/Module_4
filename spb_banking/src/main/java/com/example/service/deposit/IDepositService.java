@@ -1,4 +1,7 @@
 package com.example.service.deposit;
 
-public interface IDepositService {
+import com.example.model.Deposit;
+import com.example.service.IGeneralService;
+
+public interface IDepositService extends IGeneralService<Deposit> {
 }
