@@ -42,8 +42,11 @@ public class CustomerServiceIpm implements ICustomerService {
 
     @Override
     public Customer save(Customer customer) {
+
         LocationRegion locationRegion = customer.getLocationRegion();
         locationRegionRepository.save(locationRegion);
+
+        customer.setLocationRegion(locationRegion);
         return customerRepository.save(customer);
     }
 
@@ -104,7 +107,7 @@ public class CustomerServiceIpm implements ICustomerService {
 
         withdraw.setCustomer(customer);
         withdrawRepository.save(withdraw);
-        customerRepository.incrementBalance(customerId, transactionAmount);
+        customerRepository.decrementBalance(customerId, transactionAmount);
     }
 
     @Override

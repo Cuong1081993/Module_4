@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "withdraws")
+@Table(name = "transfers")
 
 public class Transfer extends ModalGeneral {
     @Id

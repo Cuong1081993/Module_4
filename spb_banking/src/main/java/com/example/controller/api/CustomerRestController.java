@@ -77,6 +77,7 @@ public class CustomerRestController {
             throw new ResourceNotFoundException("Customer not found");
         }
         Customer customer = customerDTO.toCustomer();
+
         customer.setId(null);
         customer.setDeleted(customerDTO.isDeleted());
         customer.setBalance(customerOptional.get().getBalance());
@@ -104,7 +105,7 @@ public class CustomerRestController {
         return new ResponseEntity<>(customer.toCustomerDTO(), HttpStatus.CREATED);
     }
 
-    @PostMapping("/withdraw/{customerId}")
+    @PostMapping("/withdraws/{customerId}")
     public ResponseEntity<?> withdraw(@PathVariable Long customerId, @RequestBody WithdrawDTO withdrawDTO) {
 
         Optional<Customer> customerOptional = customerService.findById(customerId);
