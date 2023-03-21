@@ -19,6 +19,8 @@ public interface ICustomerService extends IGeneralService<Customer> {
     List<Customer> findAllByIdNotAndDeletedIsFalse(Long id);
     List<CustomerDTO> findAllByDeletedIsFalseDTO();
 
+    List<Customer> findAllByDeletedIsFalseAndIdNot(Long senderId);
+
     List<CustomerDTO> findAllCustomerDTO();
 
     void deposit(Customer customer, Deposit deposit);
@@ -26,6 +28,8 @@ public interface ICustomerService extends IGeneralService<Customer> {
     void withdraw(Customer customer, Withdraw withdraw);
 
     void transfer(Transfer transfer);
+
+    CustomerDTO update(CustomerDTO customerDTO, Long customerId);
 
     Boolean existsByEmail(String email);
 }

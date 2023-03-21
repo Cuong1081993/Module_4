@@ -1,5 +1,6 @@
 package com.example.service.customer;
 
+import com.example.exception.ResourceNotFoundException;
 import com.example.model.*;
 import com.example.model.dto.CustomerDTO;
 import com.example.repository.*;
@@ -86,6 +87,11 @@ public class CustomerServiceIpm implements ICustomerService {
     }
 
     @Override
+    public List<Customer> findAllByDeletedIsFalseAndIdNot(Long senderId) {
+        return customerRepository.findAllByDeletedIsFalseAndIdNot(senderId);
+    }
+
+    @Override
     public List<CustomerDTO> findAllCustomerDTO() {
         return null;
     }
@@ -120,6 +126,40 @@ public class CustomerServiceIpm implements ICustomerService {
         BigDecimal transferAmount = transfer.getTransferAmount();
         customerRepository.incrementBalance(recipient, transferAmount);
         transferRepository.save(transfer);
+    }
+
+    @Override
+    public CustomerDTO update(CustomerDTO customerDTO, Long customerId) {
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        if (!customerOptional.isPresent()) {
+            throw new ResourceNotFoundException("Customer not found");
+        }
+        Customer customer = customerOptional.get();
+        if (customerDTO.isDeleted() == true) {
+            customer.setDeleted(customerDTO.isDeleted());
+        }
+        if (customerOptional.get().getBalance() != null) {
+            customer.setBalance(customerOptional.get().getBalance());
+        }
+        if (customerDTO.getEmail() != null) {
+            customer.setEmail(customerDTO.getEmail());
+        }
+        if (customerDTO.getFullName() != null) {
+            customer.setFullName(customerDTO.getFullName());
+        }
+        if (customerDTO.getPhone() != null) {
+            customer.setPhone(customerDTO.getPhone());
+        }
+        if (customerDTO.getBalance()!=null){
+            customer.setBalance(customerDTO.getBalance());
+        }
+        if (customerDTO.getLocationRegion() != null) {
+            customer.setLocationRegion(customerDTO.getLocationRegion().toLocationRegion());
+        }
+        customerRepository.save(customer);
+        return customer.toCustomerDTO();
+
+
     }
 
     @Override

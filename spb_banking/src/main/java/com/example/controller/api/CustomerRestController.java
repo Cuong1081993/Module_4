@@ -22,10 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.UserTransaction;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -39,6 +36,17 @@ public class CustomerRestController {
     @GetMapping
     public ResponseEntity<List<CustomerDTO>> getAll() {
         List<CustomerDTO> customerDTOS = customerService.findAllByDeletedIsFalseDTO();
+        return new ResponseEntity<>(customerDTOS, HttpStatus.OK);
+    }
+    @GetMapping("/notSender/{senderId}")
+    public ResponseEntity<?> getAllRecipient(@PathVariable Long senderId) {
+
+        List<Customer> customers = customerService.findAllByDeletedIsFalseAndIdNot(senderId);
+        List<CustomerDTO> customerDTOS = new ArrayList<>();
+        for (Customer customer: customers) {
+            CustomerDTO customerDTO = customer.toCustomerDTO();
+            customerDTOS.add(customerDTO);
+        }
         return new ResponseEntity<>(customerDTOS, HttpStatus.OK);
     }
 
@@ -72,18 +80,9 @@ public class CustomerRestController {
 
     @PatchMapping("/{customerId}")
     public ResponseEntity<?> update(@PathVariable Long customerId, @RequestBody CustomerDTO customerDTO) {
-        Optional<Customer> customerOptional = customerService.findById(customerId);
-        if (!customerOptional.isPresent()) {
-            throw new ResourceNotFoundException("Customer not found");
-        }
-        Customer customer = customerDTO.toCustomer();
 
-        customer.setId(null);
-        customer.setDeleted(customerDTO.isDeleted());
-        customer.setBalance(customerOptional.get().getBalance());
-        customerService.save(customer);
-
-        return new ResponseEntity<>(customer.toCustomerDTO(), HttpStatus.OK);
+        customerDTO = customerService.update(customerDTO, customerId);
+        return new ResponseEntity<>(customerDTO,HttpStatus.OK);
     }
 
     @PostMapping("/deposits/{customerId}")
@@ -99,7 +98,7 @@ public class CustomerRestController {
         deposit.setTransactionAmount(transactionAmount);
         deposit.setCustomer(customer);
 
-        customerService.deposit(customer,deposit);
+        customerService.deposit(customer, deposit);
         customer = customerService.findById(customerId).get();
 
         return new ResponseEntity<>(customer.toCustomerDTO(), HttpStatus.CREATED);
@@ -119,12 +118,12 @@ public class CustomerRestController {
         withdraw.setTransactionAmount(transactionAmount);
         withdraw.setCustomer(customer);
 
-        customerService.withdraw(customer,withdraw);
+        customerService.withdraw(customer, withdraw);
         customer = customerService.findById(customerId).get();
         return new ResponseEntity<>(customer.toCustomerDTO(), HttpStatus.OK);
     }
 
-    @PostMapping("/transfer")
+    @PostMapping("/transfers")
     public ResponseEntity<?> transfer(@Validated @RequestBody TransferDTO transferDTO, BindingResult bindingResult) {
         new TransferDTO().validate(transferDTO, bindingResult);
         if (bindingResult.hasErrors()) {

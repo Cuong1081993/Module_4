@@ -595,6 +595,7 @@
                     let currentSenderRow = $('#tr_' + senderId);
                     let newSenderRow = renderCustomer(sender);
                     currentSenderRow.replaceWith(newSenderRow);
+
                     $('.update').off('click');
                     $('.delete').off('click');
                     $('.deposit').off('click');
@@ -615,7 +616,7 @@
                 page.commands.incrementBalance(recipientId, recipientObj).then((recipient) => {
                     let currentRecipientRow = $('#tr_' + recipientId);
                     let newRecipientRow = renderCustomer(recipient);
-                    currentRecipientRow.append(newRecipientRow);
+                    currentRecipientRow.replaceWith(newRecipientRow);
 
                     $('.update').off('click');
                     $('.delete').off('click');
@@ -716,6 +717,7 @@
     }
 
     page.commands.incrementBalance = (customerId, customerObj) => {
+        console.log(customerObj)
         return $.ajax({
             headers: {
                 'accept': 'application/json',
@@ -731,6 +733,7 @@
     }
 
     page.commands.decrementBalance = (customerId, customerObj) => {
+        console.log(customerObj)
         return $.ajax({
             headers: {
                 'accept': 'application/json',
@@ -928,7 +931,7 @@
     page.loadData.getAllRecipient = (senderId) => {
         $.ajax({
             type: 'GET',
-            url: page.urls.getAllCustomer + '?id_ne=' + senderId
+            url: page.urls.getAllCustomer + '/notSender/' + senderId
         })
             .done((data) => {
                 page.dialogs.elements.recipientTrf.empty();

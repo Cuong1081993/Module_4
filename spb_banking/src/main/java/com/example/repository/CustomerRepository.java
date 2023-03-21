@@ -30,6 +30,8 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     )
     List<CustomerDTO> findAllByDeletedIsFalseDTO();
 
+    List<Customer> findAllByDeletedIsFalseAndIdNot(Long senderId);
+
     Boolean existsByEmail(String email);
 
     @Modifying

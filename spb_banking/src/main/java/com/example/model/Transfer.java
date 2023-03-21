@@ -31,6 +31,6 @@ public class Transfer extends ModalGeneral {
     @JoinColumn(name = "sender_id", referencedColumnName = "id", nullable = false)
     private Customer sender;
     @ManyToOne(targetEntity = Customer.class)
-    @JoinColumn(name = "recipient", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "recipient_id", referencedColumnName = "id", nullable = false)
     private Customer recipient;
 }
