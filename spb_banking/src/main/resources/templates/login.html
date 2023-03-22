@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="/assets/css/login.css">
+    <link rel="stylesheet" href="/assets/sweetalert2/v11.7.0/sweetalert2.min.css">
 </head>
 <body>
 <div class="form-structor">
@@ -39,6 +40,7 @@
 
 <script src="/assets/js/login.js"></script>
 <script src="/assets/jquery/v3.6.3/jquery-3.6.3.min.js"></script>
+<script src="/assets/sweetalert2/v11.7.0/sweetalert2.min.js"></script>
 
 <script>
     let btnSignUp = $("#btnSignUp");
@@ -63,13 +65,23 @@
             data: JSON.stringify(user)
         })
             .done(() => {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Register successful',
+                    showConfirmButton: false,
+                    timer: 50000
+                })
                 $("#login").click();
                 $("#usernameIn").val(user.username);
                 $("#passwordIn").val(user.password);
             })
             .fail((error) => {
-                console.log(error);
-                alert("Register fail");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Register Fail !',
+                })
             })
     })
 
@@ -89,12 +101,21 @@
             data: JSON.stringify(user)
         })
             .done((data) => {
-                console.log(data)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Login successful',
+                    showConfirmButton: false,
+                    timer: 50000
+                })
                 location.href = "/customers";
             })
             .fail((error) => {
-                console.log(error);
-                alert("Login fail");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Login Fail!',
+                })
             })
     })
 </script>

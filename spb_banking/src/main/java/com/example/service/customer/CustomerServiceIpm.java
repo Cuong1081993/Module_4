@@ -3,6 +3,7 @@ package com.example.service.customer;
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.*;
 import com.example.model.dto.CustomerDTO;
+import com.example.model.dto.LocationRegionDTO;
 import com.example.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -150,15 +151,19 @@ public class CustomerServiceIpm implements ICustomerService {
         if (customerDTO.getPhone() != null) {
             customer.setPhone(customerDTO.getPhone());
         }
-        if (customerDTO.getBalance()!=null){
+        if (customerDTO.getBalance() != null) {
             customer.setBalance(customerDTO.getBalance());
         }
         if (customerDTO.getLocationRegion() != null) {
             customer.setLocationRegion(customerDTO.getLocationRegion().toLocationRegion());
+            LocationRegionDTO locationRegionDTO = customerDTO.getLocationRegion();
+            LocationRegion locationRegion = locationRegionDTO.toLocationRegion();
+            locationRegionRepository.save(locationRegion);
+            customer.setLocationRegion(locationRegion);
         }
+
         customerRepository.save(customer);
         return customer.toCustomerDTO();
-
 
     }
 

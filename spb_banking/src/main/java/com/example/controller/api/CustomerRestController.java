@@ -16,11 +16,13 @@ import com.example.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.UserTransaction;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -63,7 +65,7 @@ public class CustomerRestController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody CustomerDTO customerDTO) {
+    public ResponseEntity<?> create(@Validated @RequestBody CustomerDTO customerDTO) {
         Boolean existsEmail = customerService.existsByEmail((customerDTO.getEmail()));
         if (existsEmail) {
             throw new EmailExistsException("Email is exists");
@@ -84,7 +86,7 @@ public class CustomerRestController {
         customerDTO = customerService.update(customerDTO, customerId);
         return new ResponseEntity<>(customerDTO,HttpStatus.OK);
     }
-
+@PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/deposits/{customerId}")
     public ResponseEntity<?> deposit(@PathVariable Long customerId, @RequestBody DepositDTO depositDTO) {
         Optional<Customer> customerOptional = customerService.findById(customerId);

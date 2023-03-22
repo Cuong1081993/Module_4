@@ -14,23 +14,48 @@
 
 <div class="container-fluid mt-2">
     <header>
-        <div class="col-lg-12">
-            <div class="col-lg-6 float-start">
-                <h1> LIST OF CUSTOMER</h1>
+        <div class="col-lg-5 float-start">
+            <h1> LIST OF CUSTOMER</h1>
+        </div>
+        <div class="col-lg-7 float-end">
+            <div class="dropdown float-end">
+                <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-user"></i>
+                    <span th:text="${fullName}"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li>
+                        <a class="dropdown-item">
+                            <button type="button" class="btn btn-outline-dark" id="btnShowCreateModal">
+                                <i class="fa fa-plus"></i>
+                                Create New Customer
+                            </button>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/logout">
+                            <button type="button" class="btn btn-outline-dark">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </button>
+
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div class="col-lg-6 float-start text-right">
-                <a href="/histories/transfers">
-                    <button class="btn btn-outline-light">
+            <div class="float-end me-2">
+                <a class="dropdown-item" href="/histories/transfer">
+                    <button class="btn btn-outline-dark">
                         <i class="fa fa-bars"></i>
                         Transfer History
                     </button>
                 </a>
-                <button type="button" class="btn btn-outline-light" id="btnShowCreateModal">
-                    <i class="fa fa-plus"></i>
-                    Create New Customer
-                </button>
             </div>
+
         </div>
+
+
     </header>
     <div class="content-page">
         <table class="table table-hover">
@@ -76,6 +101,7 @@
 </div>
 
 <script src="/assets/jquery/v3.6.3/jquery-3.6.3.min.js"></script>
+<script src="/assets/jquery-validate/v1.19.5/jquery.validate.min.js"></script>
 <script src="/assets/bootstrap/v5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/sweetalert2/v11.7.0/sweetalert2.min.js"></script>
 <script src="/assets/js/appBase.js"></script>
@@ -131,6 +157,7 @@
     page.dialogs.elements.addressCre = $('#addressCre');
 
     page.dialogs.elements.modalUpdate = $('#modalUpdate');
+    page.dialogs.elements.frmUpdate = $('#frmUpdate');
     page.dialogs.elements.fullNameUp = $('#fullNameUp');
     page.dialogs.elements.emailUp = $('#emailUp');
     page.dialogs.elements.phoneUp = $('#phoneUp');
@@ -508,6 +535,17 @@
                 showConfirmButton: false,
                 timer: 2000
             })
+                .fail((jqXHR) => {
+                    let statusCode = jqXHR.status;
+                    if (statusCode === 401) {
+                        alert("Unauthorized - Your access token has expired or is not valid.");
+                    } else {
+                        if (statusCode === 403) {
+                            alert("Forbidden - You are not authorized to access this resource.");
+                        }
+                    }
+                    console.log(statusCode);
+                })
             page.dialogs.elements.transactionAmountDep.val('');
             page.dialogs.elements.modalDeposit.modal('hide');
         })
@@ -640,23 +678,23 @@
                 page.dialogs.elements.transferAmountTrf.val('');
                 page.dialogs.elements.modalTransfer.modal('hide');
             })
-                    .catch(() => {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: 'Recipient not valid',
-                            showConfirmButton: true
-                        })
+                .catch(() => {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Recipient not valid',
+                        showConfirmButton: true
                     })
-                    .catch(() => {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: 'Sender not valid',
-                            showConfirmButton: true
-                        })
+                })
+                .catch(() => {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Sender not valid',
+                        showConfirmButton: true
                     })
-            })
+                })
+        })
     }
 
     page.commands.insertDeposit = (customerId, depObj) => {
@@ -947,10 +985,12 @@
 
     page.initializeControlEvent = () => {
         page.elements.btnCreate.on('click', function () {
-            page.commands.doCreate();
+            // page.commands.doCreate();
+            page.dialogs.elements.frmCreate.trigger("submit");
         })
         page.elements.btnUpdate.on('click', function () {
-            page.commands.doUpdate();
+            // page.commands.doUpdate();
+            page.dialogs.elements.frmUpdate.trigger("submit");
         })
         page.elements.btnDeposit.on('click', function () {
             page.commands.doDeposit();
@@ -962,8 +1002,125 @@
             page.commands.doTransfer();
         })
         page.commands.addEventChangeTransferAmount();
-
     }
+    page.dialogs.elements.frmCreate.validate({
+        rules: {
+            fullNameCre: {
+                required: true,
+                minlength: 4,
+                maxlength: 25
+            },
+            emailCre: {
+                required: true,
+                minlength: 4,
+                maxlength: 40
+            },
+            phoneCre: {
+                required: true,
+                number: true,
+                minlength: 10,
+                maxlength: 11
+            },
+            addressCre: {
+                required: true,
+                minlength: 5
+            }
+        },
+        messages: {
+            fullNameCre: {
+                required: 'Full name is required',
+                minlength: 'Min character of full name is ${0}',
+                maxlength: 'Max character of full name is ${0}'
+            },
+            emailCre: {
+                required: 'Email is required',
+                minlength: 'Min character of email is ${0}',
+                maxlength: 'Max character of email is ${0}'
+            },
+            phoneCre: {
+                required: "Phone number is required."
+            },
+            addressCre: {
+                required: "Address is required.",
+                minlength: "Address must be more than 5 letters"
+            }
+        },
+        errorLabelContainer: "#modalCreateCustomer .modal-alert-danger",
+        errorPlacement: function (error, element) {
+            error.appendTo("#modalCreateCustomer .modal-alert-danger");
+        },
+        showErrors: function (errorMap, errorList) {
+            if (this.numberOfInvalids() > 0) {
+                $('#modalCreateCustomer .modal-alert-danger').removeClass("hide").addClass('show');
+            } else {
+                $("#modalCreateCustomer .modal-alert-danger").removeClass("show").addClass("hide").empty();
+                $("#frmCreate input .error").removeClass("error");
+            }
+            this.defaultShowErrors();
+        },
+        submitHandler: function () {
+            page.commands.doCreate();
+        }
+    });
+
+    page.dialogs.elements.frmUpdate.validate({
+        rules: {
+            fullNameUp: {
+                required: true,
+                minlength: 4
+            },
+            emailUp: {
+                required: true,
+                minlength: 5,
+                maxlength: 40
+
+            },
+            phoneUp: {
+                required: true,
+
+            },
+            addressUp: {
+                required: true,
+                minlength: 5
+            }
+        },
+        messages: {
+            fullNameUp: {
+                required: "Full name is required.",
+                minlength: 'Min character of full name is ${0}',
+                maxlength: 'Max character of full name is ${0}'
+            },
+            emailUp: {
+                required: "Email is required.",
+                minlength: 'Min character of email is ${0}',
+                maxlength: 'Max character of email is ${0}'
+            },
+            phoneUp: {
+                required: "Phone number is required."
+            },
+            addressUp: {
+                required: "Address is required.",
+                minlength: "Address must be more than 5 letters"
+            }
+        },
+        errorLabelContainer: "#modalUpdate .modal-alert-danger",
+        errorPlacement: function (error, element) {
+            error.appendTo("#modalUpdate .modal-alert-danger");
+        },
+        showErrors: function (errorMap, errorList) {
+            if (this.numberOfInvalids() > 0) {
+                $("#modalUpdate .modal-alert-danger").removeClass("hidden").addClass("show");
+            } else {
+                $("#modalUpdate .modal-alert-danger").removeClass("show").addClass("hidden").empty();
+                $("#frmUpdate input.error").removeClass("error");
+            }
+            this.defaultShowErrors();
+        },
+        submitHandler: () => {
+            page.commands.doUpdate();
+        }
+    });
+
     $(() => {
         page.commands.loadData();
         page.initializeControlEvent();

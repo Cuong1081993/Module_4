@@ -31,7 +31,7 @@ public class AppUtils {
 
         if (principal instanceof UserDetails) {
             userName = ((UserDetails) principal).getUsername();
-//            userName = userName.substring(0, userName.indexOf("@"));
+//
         } else {
             userName = principal.toString();
         }
@@ -45,6 +45,7 @@ public class AppUtils {
 
         if (principal instanceof UserDetails) {
             email = ((UserDetails) principal).getUsername();
+            email = email.substring(0, email.indexOf("@"));
         } else {
             email = principal.toString();
         }

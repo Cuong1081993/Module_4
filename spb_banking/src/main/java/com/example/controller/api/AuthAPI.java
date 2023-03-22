@@ -3,12 +3,14 @@ package com.example.controller.api;
 import com.example.exception.DataInputException;
 import com.example.exception.EmailExistsException;
 import com.example.model.Role;
+import com.example.model.Staff;
 import com.example.model.User;
 import com.example.model.dto.JwtResponse;
 import com.example.model.dto.UserDTO;
 import com.example.model.dto.UserLoginDTO;
 import com.example.service.jwt.JwtService;
 import com.example.service.role.IRoleService;
+import com.example.service.staff.IStaffService;
 import com.example.service.user.IUserService;
 import com.example.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,8 @@ public class AuthAPI {
     @Autowired
     private IUserService userService;
     @Autowired
+    private IStaffService staffService;
+    @Autowired
     private IRoleService roleService;
     @Autowired
     private AppUtils appUtils;
@@ -61,7 +65,11 @@ public class AuthAPI {
             throw  new EmailExistsException("UserName is exists");
         }
         try {
-            userService.save(userDTO.toUser());
+            Staff staff= new Staff();
+
+            User user =userService.save(userDTO.toUser());
+            staff.setUser(user);
+            staffService.save(staff);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (DataIntegrityViolationException e){
             throw new DataInputException("Account information is not valid, please check again");
